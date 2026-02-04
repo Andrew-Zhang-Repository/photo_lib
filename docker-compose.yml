@@ -10,7 +10,7 @@ services:
     ports:
       - "8000:8000"
     env_file:
-      - ./app/python_backend/secrets.env
+      - ./app/python_backend/.env
     environment:
       - PYTHONUNBUFFERED=1
     volumes:
