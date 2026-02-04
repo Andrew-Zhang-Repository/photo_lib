@@ -34,6 +34,11 @@ jobs:
       - name: Start containers
         run: docker compose up --build -d
 
+      - name: Run Hello 200 test
+        run: |
+          echo "Running smoke tests..."
+          curl -f http://localhost:8000/api/message
+
       - name: Sleep for 10s
         run: sleep 10
 
