@@ -1,0 +1,44 @@
+name: photo_lib
+
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    
+    runs-on: ubuntu-latest
+
+    steps:
+    
+      - uses: actions/checkout@v4
+
+      - name: Create frontend .env file
+        run: |
+          echo "VITE_COGNITO_USER_POOL_ID=${{ secrets.VITE_COGNITO_USER_POOL_ID }}" >> app/react-app/.env
+          echo "VITE_COGNITO_CLIENT_ID=${{ secrets.VITE_COGNITO_CLIENT_ID }}" >> app/react-app/.env
+          echo "VITE_COGNITO_REGION=${{ secrets.VITE_COGNITO_REGION }}" >> app/react-app/.env
+          echo "VITE_SERVER=${{ secrets.VITE_SERVER }}" >> app/react-app/.env
+
+      - name: Create backend .env file
+        run: |
+          echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> app/python_backend/.env
+          echo "COGNITO_USER_POOL_ID=${{ secrets.COGNITO_USER_POOL_ID }}" >> app/python_backend/.env
+          echo "COGNITO_CLIENT_ID=${{ secrets.COGNITO_CLIENT_ID }}" >> app/python_backend/.env
+          echo "BUCKET_NAME=${{ secrets.BUCKET_NAME }}" >> app/python_backend/.env
+          echo "DYNAMO_NAME=${{ secrets.DYNAMO_NAME }}" >> app/python_backend/.env
+          echo "SERVER1=${{ secrets.SERVER1 }}" >> app/python_backend/.env
+          echo "SERVER2=${{ secrets.SERVER2 }}" >> app/python_backend/.env
+
+      - name: Start containers
+        run: docker-compose up --build
+
+      - name: Sleep for 10s
+        run: sleep 10
+
+      - name: Stop containers
+        if: always()
+        run: docker compose down
+
+    

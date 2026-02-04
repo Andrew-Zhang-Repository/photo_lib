@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: photo-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./app/python_backend/secrets.env
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+     
+      - ./app/python_backend:/app
+      - /app/__pycache__
+ 
+      - ~/.aws:/root/.aws:ro
+    networks:
+      - photo-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/message')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+ 
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: photo-frontend
+    ports:
+      - "5173:5173"
+    env_file:
+      - ./app/react-app/.env
+    volumes:
+     
+      - ./app/react-app/src:/app/src
+      - ./app/react-app/public:/app/public
+      - ./app/react-app/index.html:/app/index.html
+    
+      - /app/node_modules
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - photo-network
+    restart: unless-stopped
+
+networks:
+  photo-network:
+    driver: bridge

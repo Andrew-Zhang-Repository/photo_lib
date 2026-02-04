@@ -1,0 +1,43 @@
+# Git
+.git
+.gitignore
+
+# Node
+**/node_modules
+**/.npm
+
+# Python
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/.pytest_cache
+**/.mypy_cache
+**/.venv
+**/venv
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Build artifacts
+**/dist
+**/build
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Markdown docs (except README)
+*.md
+!README.md
+
+# Amp directory (Amplify scaffolding - not needed)
+amp/
+
+# Photo lib (if not needed in container)
+photo_lib/
